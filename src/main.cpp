@@ -42,7 +42,9 @@ int main( int argc, char *argv[] )
     cWndMain  obMainWindow;
     obMainWindow.show();
 
+    cSession  *poSession = new cSession();
     int r = apMainApp.exec();
+    delete poSession;
 
     g_obLogger << cSeverity::INFO;
     g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";

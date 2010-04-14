@@ -4,6 +4,7 @@
 #include <QString>
 
 #include "ui_wndmain.h"
+#include "session.h"
 
 class cWndMain : public QMainWindow, private Ui::wndMain
 {

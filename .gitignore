@@ -10,6 +10,7 @@ src/preferences.o
 src/qtlogger.o
 src/qtmysqlconnection.o
 src/qtmysqlquerymodel.o
+src/session.o
 src/tracer.o
 src/wndmain.o
 src/moc_dlglogs.cpp

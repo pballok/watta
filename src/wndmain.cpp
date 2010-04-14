@@ -8,14 +8,11 @@
 cWndMain::cWndMain( QWidget *parent )
     : QMainWindow( parent )
 {
-    cTracer obTrace( "cWndMain::cWndMain" );
-
     setupUi( this );
 }
 
 cWndMain::~cWndMain()
 {
-    cTracer obTrace( "cWndMain::~cWndMain" );
 }
 
 void cWndMain::on_action_Preferences_triggered()
