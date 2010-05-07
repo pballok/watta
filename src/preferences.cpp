@@ -1,6 +1,8 @@
 #include "preferences.h"
 #include "watta.h"
 
+#include <QSettings>
+
 cPreferences::cPreferences()
 {
     init();

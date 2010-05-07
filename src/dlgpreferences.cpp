@@ -10,6 +10,25 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
 
     setupUi( this );
 
+    m_poPreferencesAction = new QAction( QString::fromStdString( "&Preferences" ), this );
+    connect( m_poPreferencesAction, SIGNAL( triggered() ), this, SLOT( show() ) );
+
+    m_poTasksAction = new QAction( QString::fromStdString( "&Tasks" ), this );
+
+    m_poQuitAction = new QAction( QString::fromStdString( "&Quit" ), this );
+    connect( m_poQuitAction, SIGNAL( triggered() ), qApp, SLOT( quit() ) );
+
+    m_poTrayIconMenu = new QMenu( this );
+    m_poTrayIconMenu->addAction( m_poPreferencesAction );
+    m_poTrayIconMenu->addAction( m_poTasksAction );
+    m_poTrayIconMenu->addSeparator();
+    m_poTrayIconMenu->addAction( m_poQuitAction );
+
+    m_poTrayIcon = new QSystemTrayIcon( this );
+    m_poTrayIcon->setContextMenu( m_poTrayIconMenu );
+    m_poTrayIcon->setIcon( QIcon( "resources/green.jpeg" ) );
+    m_poTrayIcon->setVisible( true );
+
     unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
     g_poPrefs->getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );
     sliConsoleLogLevel->setValue( uiConLevel );

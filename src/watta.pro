@@ -1,6 +1,5 @@
 TEMPLATE = app
-FORMS = wndmain.ui \
-    dlglogs.ui \
+FORMS = dlglogs.ui \
     dlgpreferences.ui
 HEADERS = watta.h \
     sevexception.h \
@@ -10,7 +9,6 @@ HEADERS = watta.h \
     qtmysqlquerymodel.h \
     qtlogger.h \
     preferences.h \
-    wndmain.h \
     dlglogs.h \
     dlgpreferences.h \
     session.h
@@ -21,7 +19,6 @@ SOURCES = tracer.cpp \
     qtlogger.cpp \
     preferences.cpp \
     main.cpp \
-    wndmain.cpp \
     dlglogs.cpp \
     dlgpreferences.cpp \
     session.cpp

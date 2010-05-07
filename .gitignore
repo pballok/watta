@@ -12,15 +12,11 @@ src/qtmysqlconnection.o
 src/qtmysqlquerymodel.o
 src/session.o
 src/tracer.o
-src/wndmain.o
 src/moc_dlglogs.cpp
 src/moc_dlglogs.o
 src/moc_dlgpreferences.cpp
 src/moc_dlgpreferences.o
 src/moc_qtmysqlquerymodel.cpp
 src/moc_qtmysqlquerymodel.o
-src/moc_wndmain.cpp
-src/moc_wndmain.o
 src/ui_dlglogs.h
 src/ui_dlgpreferences.h
-src/ui_wndmain.h

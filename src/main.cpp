@@ -1,13 +1,13 @@
+#include <QtGui>
 #include <QApplication>
 #include <QString>
-#include <QSettings>
 #include <QMessageBox>
-#include <QTranslator>
 
 #include "qtlogger.h"
 #include "qtmysqlconnection.h"
 #include "preferences.h"
-#include "wndmain.h"
+#include "dlgpreferences.h"
+#include "session.h"
 
 cQTLogger             g_obLogger;
 cQTMySQLConnection   *g_poDB;
@@ -16,6 +16,12 @@ cPreferences         *g_poPrefs;
 int main( int argc, char *argv[] )
 {
     QApplication  apMainApp( argc, argv );
+
+    if( !QSystemTrayIcon::isSystemTrayAvailable() )
+    {
+        QMessageBox::critical( 0, "WATTA", "Couldn't detect any system tray on this system.");
+        return 1;
+    }
 
     g_poDB     = new cQTMySQLConnection;
 
@@ -39,7 +45,9 @@ int main( int argc, char *argv[] )
     g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
     g_obLogger << cQTLogger::EOM;
 
-    cWndMain  obMainWindow;
+    QApplication::setQuitOnLastWindowClosed( false );
+
+    cDlgPreferences  obMainWindow;
     obMainWindow.show();
 
     cSession  *poSession = new cSession();

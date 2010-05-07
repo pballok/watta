@@ -115,8 +115,8 @@ void cQTLogger::logToDB( const cSeverity::teSeverity  p_enLevel,
 }
 
 void cQTLogger::logToGUI( const cSeverity::teSeverity  p_enLevel,
-                        const string                &p_stMessage )
-                    throw()
+                          const string                &p_stMessage )
+     throw()
 {
     QMessageBox::Icon  enIcon  = QMessageBox::NoIcon;
     QString            obTitle = "";

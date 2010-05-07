@@ -1,6 +1,10 @@
 #ifndef DLGPREFERENCES_H
 #define DLGPREFERENCES_H
 
+#include <QAction>
+#include <QSystemTrayIcon>
+#include <QMenu>
+
 #include "ui_dlgpreferences.h"
 
 class cDlgPreferences : public QDialog, private Ui::dlgPreferences
@@ -12,6 +16,14 @@ public:
 
 public slots:
     virtual void accept();
+
+private:
+    QAction                   *m_poPreferencesAction;
+    QAction                   *m_poTasksAction;
+    QAction                   *m_poQuitAction;
+
+    QSystemTrayIcon           *m_poTrayIcon;
+    QMenu                     *m_poTrayIconMenu;
 
 private slots:
     void on_sliConsoleLogLevel_valueChanged( int p_inValue );
