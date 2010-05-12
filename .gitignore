@@ -18,5 +18,7 @@ src/moc_dlgpreferences.cpp
 src/moc_dlgpreferences.o
 src/moc_qtmysqlquerymodel.cpp
 src/moc_qtmysqlquerymodel.o
+src/qrc_watta.cpp
+src/qrc_watta.o
 src/ui_dlglogs.h
 src/ui_dlgpreferences.h

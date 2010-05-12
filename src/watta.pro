@@ -26,3 +26,4 @@ DESTDIR = ..
 QT += sql
 CONFIG += qt
 CONFIG += console
+RESOURCES += watta.qrc

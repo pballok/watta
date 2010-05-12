@@ -26,7 +26,7 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
 
     m_poTrayIcon = new QSystemTrayIcon( this );
     m_poTrayIcon->setContextMenu( m_poTrayIconMenu );
-    m_poTrayIcon->setIcon( QIcon( "resources/green.jpeg" ) );
+    m_poTrayIcon->setIcon( QIcon( ":/images/green.jpeg" ) );
     m_poTrayIcon->setVisible( true );
 
     unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
