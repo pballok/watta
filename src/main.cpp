@@ -36,9 +36,7 @@ int main( int argc, char *argv[] )
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity();
-        g_obLogger << e.what();
-        g_obLogger << cQTLogger::EOM;
+        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
     }
 
     g_obLogger << cSeverity::INFO;
