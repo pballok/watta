@@ -17,46 +17,58 @@ int main( int argc, char *argv[] )
 {
     QApplication  apMainApp( argc, argv );
 
-    if( !QSystemTrayIcon::isSystemTrayAvailable() )
-    {
-        QMessageBox::critical( 0, "WATTA", "Couldn't detect any system tray on this system.");
-        return 1;
-    }
+    int  inRetVal = 1;
 
-    g_poDB     = new cQTMySQLConnection;
-
-    g_poPrefs  = new cPreferences( QString::fromAscii( "watta" ) );
-    g_poPrefs->setVersion( "0.1.0" );
-    g_poPrefs->setDBAccess( "localhost", "watta", "watta", "watta" );
+    g_poDB = NULL;
+    g_poPrefs = NULL;
 
     try
     {
+        bool          boSysTrayFound = false;
+        unsigned int  uiCheckCounter = 0;
+        while( !boSysTrayFound && uiCheckCounter++ < 20 )
+        {
+            boSysTrayFound = QSystemTrayIcon::isSystemTrayAvailable();
+            if( !boSysTrayFound ) sleep( 5 );
+        }
+        if( !boSysTrayFound )
+        {
+            throw cSevException( cSeverity::ERROR, "Couldn't detect any system tray on this system." );
+        }
+
+        g_poDB     = new cQTMySQLConnection;
+
+        g_poPrefs  = new cPreferences( QString::fromAscii( "watta" ) );
+        g_poPrefs->setVersion( "0.1.0" );
+        g_poPrefs->setDBAccess( "localhost", "watta", "watta", "watta" );
+
         g_poDB->open();
         g_obLogger.setDBConnection( g_poDB );
+
+        g_obLogger << cSeverity::INFO;
+        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
+        g_obLogger << cQTLogger::EOM;
+
+        QApplication::setQuitOnLastWindowClosed( false );
+
+        cDlgPreferences  obMainWindow;
+        obMainWindow.show();
+
+        cSession  *poSession = new cSession();
+        inRetVal = apMainApp.exec();
+        delete poSession;
+
+        g_obLogger << cSeverity::INFO;
+        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
+        g_obLogger << cQTLogger::EOM;
     }
     catch( cSevException &e )
     {
         g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
     }
 
-    g_obLogger << cSeverity::INFO;
-    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
-    g_obLogger << cQTLogger::EOM;
+    if( g_poDB ) delete g_poDB;
+    if( g_poPrefs ) delete g_poPrefs;
 
-    QApplication::setQuitOnLastWindowClosed( false );
-
-    cDlgPreferences  obMainWindow;
-    obMainWindow.show();
-
-    cSession  *poSession = new cSession();
-    int r = apMainApp.exec();
-    delete poSession;
-
-    g_obLogger << cSeverity::INFO;
-    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
-    g_obLogger << cQTLogger::EOM;
-
-    delete g_poDB;
-
-    return r;
+    return inRetVal;
 }
