@@ -52,11 +52,9 @@ int main( int argc, char *argv[] )
         cWattaMainApp::setQuitOnLastWindowClosed( false );
 
         cDlgPreferences  obMainWindow;
-        obMainWindow.show();
 
         apMainApp.startSession();
         inRetVal = apMainApp.exec();
-
     }
     catch( cSevException &e )
     {

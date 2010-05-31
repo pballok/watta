@@ -10,7 +10,6 @@ cWattaMainApp::cWattaMainApp( int &argc, char **argv ) : QApplication( argc, arg
 
 cWattaMainApp::~cWattaMainApp()
 {
-    endSession();
 }
 
 void cWattaMainApp::startSession() throw()
