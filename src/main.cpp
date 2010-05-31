@@ -7,7 +7,7 @@
 #include "qtmysqlconnection.h"
 #include "preferences.h"
 #include "dlgpreferences.h"
-#include "session.h"
+#include "wattamainapp.h"
 
 cQTLogger             g_obLogger;
 cQTMySQLConnection   *g_poDB;
@@ -15,7 +15,7 @@ cPreferences         *g_poPrefs;
 
 int main( int argc, char *argv[] )
 {
-    QApplication  apMainApp( argc, argv );
+    cWattaMainApp  apMainApp( argc, argv );
 
     int  inRetVal = 1;
 
@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
         g_poDB     = new cQTMySQLConnection;
 
         g_poPrefs  = new cPreferences( QString::fromAscii( "watta" ) );
-        g_poPrefs->setVersion( "0.1.0" );
+        g_poPrefs->setVersion( "0.1.2" );
         g_poPrefs->setDBAccess( "localhost", "watta", "watta", "watta" );
 
         g_poDB->open();
@@ -49,18 +49,14 @@ int main( int argc, char *argv[] )
         g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
         g_obLogger << cQTLogger::EOM;
 
-        QApplication::setQuitOnLastWindowClosed( false );
+        cWattaMainApp::setQuitOnLastWindowClosed( false );
 
         cDlgPreferences  obMainWindow;
         obMainWindow.show();
 
-        cSession  *poSession = new cSession();
+        apMainApp.startSession();
         inRetVal = apMainApp.exec();
-        delete poSession;
 
-        g_obLogger << cSeverity::INFO;
-        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
-        g_obLogger << cQTLogger::EOM;
     }
     catch( cSevException &e )
     {

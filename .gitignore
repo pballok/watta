@@ -12,12 +12,15 @@ src/qtmysqlconnection.o
 src/qtmysqlquerymodel.o
 src/session.o
 src/tracer.o
+src/wattamainapp.o
 src/moc_dlglogs.cpp
 src/moc_dlglogs.o
 src/moc_dlgpreferences.cpp
 src/moc_dlgpreferences.o
 src/moc_qtmysqlquerymodel.cpp
 src/moc_qtmysqlquerymodel.o
+src/moc_wattamainapp.cpp
+src/moc_wattamainapp.o
 src/qrc_watta.cpp
 src/qrc_watta.o
 src/ui_dlglogs.h

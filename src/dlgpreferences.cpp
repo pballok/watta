@@ -10,6 +10,9 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
 
     setupUi( this );
 
+    QString qsTitle( g_poPrefs->getAppName() + " Version " + g_poPrefs->getVersion() );
+    setWindowTitle( qsTitle );
+
     m_poPreferencesAction = new QAction( QString::fromStdString( "&Preferences" ), this );
     connect( m_poPreferencesAction, SIGNAL( triggered() ), this, SLOT( show() ) );
 
@@ -28,12 +31,14 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
     m_poTrayIcon->setContextMenu( m_poTrayIconMenu );
     m_poTrayIcon->setIcon( QIcon( ":/images/green.jpeg" ) );
     m_poTrayIcon->setVisible( true );
+    m_poTrayIcon->setToolTip( qsTitle );
 
     unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
     g_poPrefs->getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );
     sliConsoleLogLevel->setValue( uiConLevel );
     sliDBLogLevel->setValue( uiDBLevel );
     sliGUILogLevel->setValue( uiGUILevel );
+
 }
 
 void cDlgPreferences::on_sliConsoleLogLevel_valueChanged( int p_inValue )
