@@ -1,9 +1,11 @@
 #include "wattamainapp.h"
 #include "watta.h"
 
+#include <QDateTime>
+
 cWattaMainApp::cWattaMainApp( int &argc, char **argv ) : QApplication( argc, argv )
 {
-    m_poSession = NULL;
+    m_poCurrWorkDay = NULL;
 
     connect( this, SIGNAL( aboutToQuit() ), this, SLOT( endSession() ) );
 }
@@ -14,13 +16,16 @@ cWattaMainApp::~cWattaMainApp()
 
 void cWattaMainApp::startSession() throw()
 {
-    m_poSession = new cSession();
+    QDateTime  obCurrDateTime = QDateTime::currentDateTime();
+
+    QString qsStartDate = obCurrDateTime.toString( "yyyy-MM-dd" );
+
+    m_poCurrWorkDay = new cWorkDay( qsStartDate );
 }
 
 void cWattaMainApp::endSession() throw()
 {
-    if( m_poSession ) delete m_poSession;
-    m_poSession = NULL;
+    if( m_poCurrWorkDay ) delete m_poCurrWorkDay;
 
     g_obLogger << cSeverity::INFO;
     g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";

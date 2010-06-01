@@ -1,0 +1,90 @@
+#include "workday.h"
+#include "watta.h"
+
+cWorkDay::cWorkDay( QString &p_qsDate )
+{
+    m_qsDate = "";
+    m_uiSeconds = 0;
+
+    QSqlQuery *poQuery = NULL;
+
+    try
+    {
+        poQuery = g_poDB->executeQTQuery( QString( "SELECT * FROM `workdays` WHERE `date`='%1'").arg( p_qsDate ) );
+        if( poQuery->size() == 0 )
+        {
+            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`) VALUES ('%1')" ).arg( p_qsDate ).toStdString(), true );
+        }
+
+        m_qsDate = p_qsDate;
+    }
+    catch( cSevException &e )
+    {
+        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
+    }
+
+    if( poQuery ) delete poQuery;
+
+    loadSessions();
+
+    m_poCurrSession = new cSession();
+}
+
+cWorkDay::~cWorkDay()
+{
+    delete m_poCurrSession;
+}
+
+void cWorkDay::loadSessions()
+{
+    cTracer obTracer( "cWorkDay::loadSessions" );
+
+    QSqlQuery *poQuery = NULL;
+
+    try
+    {
+        poQuery = g_poDB->executeQTQuery( QString( "SELECT `startTime`, `endTime` FROM `sessions` WHERE `date`='%1'").arg( m_qsDate ) );
+        while( poQuery->next() )
+        {
+            QString qsStartTime = poQuery->value( 0 ).toString();
+            QString qsEndTime = poQuery->value( 1 ).toString();
+
+            if( qsStartTime == "" || qsEndTime == "" )
+            {
+                g_obLogger << cSeverity::WARNING << "Corrupt Session Data:";
+                g_obLogger << " Date: " << m_qsDate.toStdString();
+                g_obLogger << " StarTime: " << qsStartTime.toStdString();
+                g_obLogger << " EndTime: " << qsEndTime.toStdString();
+                g_obLogger << cQTLogger::EOM;
+            }
+            else
+            {
+                unsigned int  uiStartSeconds = timeStrToSeconds( qsStartTime );
+                unsigned int  uiEndSeconds   = timeStrToSeconds( qsEndTime );
+                m_uiSeconds += uiEndSeconds - uiStartSeconds;
+            }
+        }
+    }
+    catch( cSevException &e )
+    {
+        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
+    }
+
+    if( poQuery ) delete poQuery;
+
+    obTracer << "seconds: " << m_uiSeconds;
+}
+
+unsigned int cWorkDay::timeStrToSeconds( QString &p_qsTime )
+{
+    bool boConversionOk = true;
+    unsigned int uiSeconds = p_qsTime.section( ':', 2, 2 ).toInt( &boConversionOk, 10 );
+
+    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 1, 1 ).toInt( &boConversionOk, 10 ) * 60;
+    else uiSeconds = 0;
+
+    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 0, 0 ).toInt( &boConversionOk, 10 ) * 3600;
+    else uiSeconds = 0;
+
+    return uiSeconds;
+}

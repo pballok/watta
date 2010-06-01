@@ -12,7 +12,8 @@ HEADERS = watta.h \
     dlglogs.h \
     dlgpreferences.h \
     session.h \
-    wattamainapp.h
+    wattamainapp.h \
+    workday.h
 SOURCES = tracer.cpp \
     dbconnection.cpp \
     qtmysqlconnection.cpp \
@@ -23,7 +24,8 @@ SOURCES = tracer.cpp \
     dlglogs.cpp \
     dlgpreferences.cpp \
     session.cpp \
-    wattamainapp.cpp
+    wattamainapp.cpp \
+    workday.cpp
 DESTDIR = ..
 QT += sql
 CONFIG += qt

@@ -13,6 +13,7 @@ src/qtmysqlquerymodel.o
 src/session.o
 src/tracer.o
 src/wattamainapp.o
+src/workday.o
 src/moc_dlglogs.cpp
 src/moc_dlglogs.o
 src/moc_dlgpreferences.cpp

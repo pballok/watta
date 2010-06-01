@@ -11,22 +11,14 @@ cSession::cSession()
     m_qsStartDate = obCurrDateTime.toString( "yyyy-MM-dd" );
     m_qsStartTime = obCurrDateTime.toString( "hh:mm:ss" );
 
-    QSqlQuery *poQuery = NULL;
     try
     {
-        poQuery = g_poDB->executeQTQuery( QString( "SELECT * FROM `workdays` WHERE `date`='%1'").arg( m_qsStartDate ) );
-        if( poQuery->size() == 0 )
-        {
-            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`) VALUES ('%1')" ).arg( m_qsStartDate ).toStdString(), true );
-        }
+        g_poDB->executeQuery( QString( "INSERT INTO `sessions` (`date`, `startTime`) VALUES ('%1', '%2')" ).arg( m_qsStartDate ).arg( m_qsStartTime ).toStdString(), true );
     }
     catch( cSevException &e )
     {
         g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
     }
-    if( poQuery ) delete poQuery;
-
-    g_poDB->executeQuery( QString( "INSERT INTO `sessions` (`date`, `startTime`) VALUES ('%1', '%2')" ).arg( m_qsStartDate ).arg( m_qsStartTime ).toStdString(), true );
 }
 
 cSession::~cSession()

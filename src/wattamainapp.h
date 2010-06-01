@@ -3,7 +3,7 @@
 
 #include <QApplication>
 
-#include "session.h"
+#include "workday.h"
 
 class cWattaMainApp : public QApplication
 {
@@ -19,7 +19,7 @@ public slots:
     void endSession()     throw();
 
 private:
-    cSession  *m_poSession;
+    cWorkDay  *m_poCurrWorkDay;
 };
 
 #endif // WATTAMAINAPP_H
