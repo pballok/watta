@@ -1,8 +1,6 @@
 #include "wattamainapp.h"
 #include "watta.h"
 
-#include <QDateTime>
-
 cWattaMainApp::cWattaMainApp( int &argc, char **argv ) : QApplication( argc, argv )
 {
     m_poCurrWorkDay = NULL;
@@ -16,11 +14,7 @@ cWattaMainApp::~cWattaMainApp()
 
 void cWattaMainApp::startSession() throw()
 {
-    QDateTime  obCurrDateTime = QDateTime::currentDateTime();
-
-    QString qsStartDate = obCurrDateTime.toString( "yyyy-MM-dd" );
-
-    m_poCurrWorkDay = new cWorkDay( qsStartDate );
+    m_poCurrWorkDay = new cWorkDay();
 }
 
 void cWattaMainApp::endSession() throw()

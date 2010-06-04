@@ -8,6 +8,7 @@
 class cWorkDay
 {
 public:
+    cWorkDay();
     cWorkDay( QString &p_stDate );
     ~cWorkDay();
 
@@ -16,6 +17,7 @@ private:
     unsigned int   m_uiSeconds;
     cSession      *m_poCurrSession;
 
+    void           load( QString &p_qsDate );
     void           loadSessions();
     unsigned int   timeStrToSeconds( QString &p_qsTime );
 };

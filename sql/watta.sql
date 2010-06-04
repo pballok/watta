@@ -12,6 +12,8 @@ CREATE TABLE `logs` (
 CREATE TABLE `workdays` (
   `date`           DATE                NOT NULL,
   `activities`     VARCHAR(1024)                DEFAULT NULL,
+  `endTime`        TIME                         DEFAULT NULL,
+  `length`         TIME                         DEFAULT NULL,
   PRIMARY KEY `pk_workdays_date` (`date`)
 ) ENGINE=InnoDB;
 

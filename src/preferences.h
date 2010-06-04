@@ -7,13 +7,17 @@ class cPreferences
 {
 public:
     cPreferences();
-    cPreferences( const QString &p_qsFileName );
+    cPreferences( const QString &p_qsAppName );
     ~cPreferences();
 
-    void                       setAppName( const QString &p_qsFileName );
+    void                       setAppName( const QString &p_qsAppName );
     QString                    getAppName() const;
     void                       setVersion( const QString &p_qsVersion );
     QString                    getVersion() const;
+    void                       setWorkDayEnd( const QString &p_qsTime );
+    QString                    getWorkDayEnd() const;
+    void                       setWorkDayLength( const QString &p_qsTime );
+    QString                    getWorkDayLength() const;
     void                       setLogLevels( const unsigned int p_uiConLevel,
                                              const unsigned int p_uiDBLevel,
                                              const unsigned int p_uiGUILevel,
@@ -33,6 +37,8 @@ private:
     QString                    m_qsAppName;
     QString                    m_qsFileName;
     QString                    m_qsVersion;
+    QString                    m_qsWorkDayEnd;
+    QString                    m_qsWorkDayLength;
 
     void init();
 };

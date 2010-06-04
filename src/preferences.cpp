@@ -8,10 +8,10 @@ cPreferences::cPreferences()
     init();
 }
 
-cPreferences::cPreferences( const QString &p_qsFileName )
+cPreferences::cPreferences( const QString &p_qsAppName )
 {
     init();
-    setAppName( p_qsFileName );
+    setAppName( p_qsAppName );
     load();
 }
 
@@ -24,6 +24,8 @@ void cPreferences::init()
     m_qsAppName         = "";
     m_qsFileName        = "";
     m_qsVersion         = "";
+    m_qsWorkDayEnd      = "";
+    m_qsWorkDayLength   = "";
 }
 
 void cPreferences::setAppName( const QString &p_qsAppName )
@@ -63,6 +65,26 @@ void cPreferences::setLogLevels( const unsigned int p_uiConLevel,
         obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), p_uiDBLevel );
         obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), p_uiGUILevel );
     }
+}
+
+void cPreferences::setWorkDayEnd( const QString &p_qsTime )
+{
+    m_qsWorkDayEnd = p_qsTime;
+}
+
+QString cPreferences::getWorkDayEnd() const
+{
+    return m_qsWorkDayEnd;
+}
+
+void cPreferences::setWorkDayLength( const QString &p_qsTime )
+{
+    m_qsWorkDayLength = p_qsTime;
+}
+
+QString cPreferences::getWorkDayLength() const
+{
+    return m_qsWorkDayLength;
 }
 
 void cPreferences::getLogLevels( unsigned int *p_poConLevel,
@@ -109,6 +131,9 @@ void cPreferences::load()
     }
     else
     {
+        m_qsWorkDayEnd    = obPrefFile.value( QString::fromAscii( "WorkDay/EndTime" ), "00:00:00" ).toString();
+        m_qsWorkDayLength = obPrefFile.value( QString::fromAscii( "WorkDay/Length" ), "08:30:00" ).toString();
+
         unsigned int uiConsoleLevel = obPrefFile.value( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), cSeverity::ERROR ).toUInt();
         if( (uiConsoleLevel >= cSeverity::MAX) ||
             (uiConsoleLevel <= cSeverity::MIN) )
@@ -149,6 +174,9 @@ void cPreferences::load()
 void cPreferences::save() const
 {
     QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
+
+    obPrefFile.setValue( "WorkDay/EndTime", m_qsWorkDayEnd );
+    obPrefFile.setValue( "WorkDay/Length", m_qsWorkDayLength );
 
     unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
     getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );

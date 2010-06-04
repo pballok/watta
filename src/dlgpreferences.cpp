@@ -39,6 +39,8 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
     sliDBLogLevel->setValue( uiDBLevel );
     sliGUILogLevel->setValue( uiGUILevel );
 
+    ledWorkDayEnd->setText( g_poPrefs->getWorkDayEnd() );
+    ledWorkDayLen->setText( g_poPrefs->getWorkDayLength() );
 }
 
 void cDlgPreferences::on_sliConsoleLogLevel_valueChanged( int p_inValue )

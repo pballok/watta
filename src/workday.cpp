@@ -1,7 +1,28 @@
 #include "workday.h"
 #include "watta.h"
 
+cWorkDay::cWorkDay()
+{
+    QString qsDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd" );
+
+    load( qsDate );
+
+    m_poCurrSession = new cSession();
+}
+
 cWorkDay::cWorkDay( QString &p_qsDate )
+{
+    load( p_qsDate );
+
+    m_poCurrSession = NULL;
+}
+
+cWorkDay::~cWorkDay()
+{
+    if( m_poCurrSession ) delete m_poCurrSession;
+}
+
+void cWorkDay::load( QString &p_qsDate )
 {
     m_qsDate = "";
     m_uiSeconds = 0;
@@ -13,7 +34,7 @@ cWorkDay::cWorkDay( QString &p_qsDate )
         poQuery = g_poDB->executeQTQuery( QString( "SELECT * FROM `workdays` WHERE `date`='%1'").arg( p_qsDate ) );
         if( poQuery->size() == 0 )
         {
-            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`) VALUES ('%1')" ).arg( p_qsDate ).toStdString(), true );
+            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`, `endTime`, `length`) VALUES ('%1')" ).arg( p_qsDate ).arg( g_poPrefs->getWorkDayEnd() ).arg( g_poPrefs->getWorkDayLength() ).toStdString(), true );
         }
 
         m_qsDate = p_qsDate;
@@ -26,13 +47,6 @@ cWorkDay::cWorkDay( QString &p_qsDate )
     if( poQuery ) delete poQuery;
 
     loadSessions();
-
-    m_poCurrSession = new cSession();
-}
-
-cWorkDay::~cWorkDay()
-{
-    delete m_poCurrSession;
 }
 
 void cWorkDay::loadSessions()
