@@ -26,6 +26,10 @@ void cPreferences::init()
     m_qsVersion         = "";
     m_qsWorkDayEnd      = "";
     m_qsWorkDayLength   = "";
+
+    m_ulWorkDayEndSeconds    = 0;
+    m_ulWorkDayLengthSeconds = 0;
+
 }
 
 void cPreferences::setAppName( const QString &p_qsAppName )
@@ -70,6 +74,7 @@ void cPreferences::setLogLevels( const unsigned int p_uiConLevel,
 void cPreferences::setWorkDayEnd( const QString &p_qsTime )
 {
     m_qsWorkDayEnd = p_qsTime;
+    m_ulWorkDayEndSeconds = timeStrToSeconds( m_qsWorkDayEnd );
 }
 
 QString cPreferences::getWorkDayEnd() const
@@ -77,14 +82,25 @@ QString cPreferences::getWorkDayEnd() const
     return m_qsWorkDayEnd;
 }
 
+unsigned long cPreferences::getWorkDayEndSeconds() const
+{
+    return m_ulWorkDayEndSeconds;
+}
+
 void cPreferences::setWorkDayLength( const QString &p_qsTime )
 {
     m_qsWorkDayLength = p_qsTime;
+    m_ulWorkDayLengthSeconds = timeStrToSeconds( m_qsWorkDayLength );
 }
 
 QString cPreferences::getWorkDayLength() const
 {
     return m_qsWorkDayLength;
+}
+
+unsigned long cPreferences::getWorkDayLengthSeconds() const
+{
+    return m_ulWorkDayLengthSeconds;
 }
 
 void cPreferences::getLogLevels( unsigned int *p_poConLevel,
@@ -131,8 +147,8 @@ void cPreferences::load()
     }
     else
     {
-        m_qsWorkDayEnd    = obPrefFile.value( QString::fromAscii( "WorkDay/EndTime" ), "00:00:00" ).toString();
-        m_qsWorkDayLength = obPrefFile.value( QString::fromAscii( "WorkDay/Length" ), "08:30:00" ).toString();
+        setWorkDayEnd( obPrefFile.value( QString::fromAscii( "WorkDay/EndTime" ), "00:00:00" ).toString() );
+        setWorkDayLength( obPrefFile.value( QString::fromAscii( "WorkDay/Length" ), "08:30:00" ).toString() );
 
         unsigned int uiConsoleLevel = obPrefFile.value( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), cSeverity::ERROR ).toUInt();
         if( (uiConsoleLevel >= cSeverity::MAX) ||
@@ -183,4 +199,18 @@ void cPreferences::save() const
     obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
     obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), uiDBLevel );
     obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), uiGUILevel );
+}
+
+unsigned int cPreferences::timeStrToSeconds( QString &p_qsTime )
+{
+    bool boConversionOk = true;
+    unsigned int uiSeconds = p_qsTime.section( ':', 2, 2 ).toInt( &boConversionOk, 10 );
+
+    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 1, 1 ).toInt( &boConversionOk, 10 ) * 60;
+    else uiSeconds = 0;
+
+    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 0, 0 ).toInt( &boConversionOk, 10 ) * 3600;
+    else uiSeconds = 0;
+
+    return uiSeconds;
 }

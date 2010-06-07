@@ -73,8 +73,8 @@ void cWorkDay::loadSessions()
             }
             else
             {
-                unsigned int  uiStartSeconds = timeStrToSeconds( qsStartTime );
-                unsigned int  uiEndSeconds   = timeStrToSeconds( qsEndTime );
+                unsigned int  uiStartSeconds = cPreferences::timeStrToSeconds( qsStartTime );
+                unsigned int  uiEndSeconds   = cPreferences::timeStrToSeconds( qsEndTime );
                 m_uiSeconds += uiEndSeconds - uiStartSeconds;
             }
         }
@@ -87,18 +87,4 @@ void cWorkDay::loadSessions()
     if( poQuery ) delete poQuery;
 
     obTracer << "seconds: " << m_uiSeconds;
-}
-
-unsigned int cWorkDay::timeStrToSeconds( QString &p_qsTime )
-{
-    bool boConversionOk = true;
-    unsigned int uiSeconds = p_qsTime.section( ':', 2, 2 ).toInt( &boConversionOk, 10 );
-
-    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 1, 1 ).toInt( &boConversionOk, 10 ) * 60;
-    else uiSeconds = 0;
-
-    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 0, 0 ).toInt( &boConversionOk, 10 ) * 3600;
-    else uiSeconds = 0;
-
-    return uiSeconds;
 }

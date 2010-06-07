@@ -19,7 +19,6 @@ private:
 
     void           load( QString &p_qsDate );
     void           loadSessions();
-    unsigned int   timeStrToSeconds( QString &p_qsTime );
 };
 
 #endif // WORKDAY_H

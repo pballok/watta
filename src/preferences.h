@@ -16,8 +16,10 @@ public:
     QString                    getVersion() const;
     void                       setWorkDayEnd( const QString &p_qsTime );
     QString                    getWorkDayEnd() const;
+    unsigned long              getWorkDayEndSeconds() const;
     void                       setWorkDayLength( const QString &p_qsTime );
     QString                    getWorkDayLength() const;
+    unsigned long              getWorkDayLengthSeconds() const;
     void                       setLogLevels( const unsigned int p_uiConLevel,
                                              const unsigned int p_uiDBLevel,
                                              const unsigned int p_uiGUILevel,
@@ -33,12 +35,17 @@ public:
     void                       load();
     void                       save() const;
 
+    static unsigned int        timeStrToSeconds( QString &p_qsTime );
+
 private:
     QString                    m_qsAppName;
     QString                    m_qsFileName;
     QString                    m_qsVersion;
     QString                    m_qsWorkDayEnd;
     QString                    m_qsWorkDayLength;
+
+    unsigned long              m_ulWorkDayEndSeconds;
+    unsigned long              m_ulWorkDayLengthSeconds;
 
     void init();
 };

@@ -64,6 +64,9 @@ void cDlgPreferences::accept()
                              sliDBLogLevel->value(),
                              sliGUILogLevel->value() );
 
+    g_poPrefs->setWorkDayEnd( ledWorkDayEnd->text() );
+    g_poPrefs->setWorkDayLength( ledWorkDayLen->text() );
+
     g_poPrefs->save();
 
     QDialog::accept();

@@ -39,7 +39,7 @@ int main( int argc, char *argv[] )
         g_poDB     = new cQTMySQLConnection;
 
         g_poPrefs  = new cPreferences( QString::fromAscii( "watta" ) );
-        g_poPrefs->setVersion( "0.1.4" );
+        g_poPrefs->setVersion( "0.2.0" );
         g_poPrefs->setDBAccess( "localhost", "watta", "watta", "watta" );
 
         g_poDB->open();
@@ -53,7 +53,7 @@ int main( int argc, char *argv[] )
 
         cDlgPreferences  obMainWindow;
 
-        apMainApp.startSession();
+        apMainApp.startSession( &obMainWindow );
         inRetVal = apMainApp.exec();
     }
     catch( cSevException &e )
