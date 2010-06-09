@@ -15,8 +15,6 @@ cPreferences         *g_poPrefs;
 
 int main( int argc, char *argv[] )
 {
-    cWattaMainApp  apMainApp( argc, argv );
-
     int  inRetVal = 1;
 
     g_poDB = NULL;
@@ -24,6 +22,8 @@ int main( int argc, char *argv[] )
 
     try
     {
+        cWattaMainApp  apMainApp( argc, argv );
+
         bool          boSysTrayFound = false;
         unsigned int  uiCheckCounter = 0;
         while( !boSysTrayFound && uiCheckCounter++ < 20 )

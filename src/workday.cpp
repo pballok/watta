@@ -3,6 +3,8 @@
 
 cWorkDay::cWorkDay()
 {
+    cTracer obTracer( "cWorkDay::cWorkDay" );
+
     QString qsDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd" );
 
     load( qsDate );
@@ -12,6 +14,8 @@ cWorkDay::cWorkDay()
 
 cWorkDay::cWorkDay( QString &p_qsDate )
 {
+    cTracer obTracer( "cWorkDay::cWorkDay", p_qsDate.toStdString() );
+
     load( p_qsDate );
 
     m_poCurrSession = NULL;
@@ -19,11 +23,15 @@ cWorkDay::cWorkDay( QString &p_qsDate )
 
 cWorkDay::~cWorkDay()
 {
+    cTracer obTracer( "cWorkDay::~cWorkDay" );
+
     if( m_poCurrSession ) delete m_poCurrSession;
 }
 
 void cWorkDay::load( QString &p_qsDate )
 {
+    cTracer obTracer( "cWorkDay::load", p_qsDate.toStdString() );
+
     m_qsDate = "";
     m_uiSeconds = 0;
 
