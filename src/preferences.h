@@ -35,7 +35,8 @@ public:
     void                       load();
     void                       save() const;
 
-    static unsigned int        timeStrToSeconds( QString &p_qsTime );
+    static long                timeStrToSeconds( const QString &p_qsTime );
+    static QString             secondsToTimeStr( const long p_loSeconds );
 
 private:
     QString                    m_qsAppName;

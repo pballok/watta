@@ -1,5 +1,5 @@
 El kellene inditani egy timer-t a cMainApp::startSession-ben, leallitani az endSession-ben.
-A Preferences-ben mar ki van szamolva a WorkDaEnd es WorkDayLen mp-ben, a WorkDay is tudja
+A Preferences-ben mar ki van szamolva a WorkDayEnd es WorkDayLen mp-ben, a WorkDay is tudja
 a sajat eddigi hosszat mp-ben. A timernek ki kell szamolnia az aktualis session hosszat
 mp-ben, majd ezekbol kiszamolhatja mennyi van meg hatra, allithat tooltip-et, icon-t, stb.
 

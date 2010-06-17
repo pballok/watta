@@ -43,6 +43,11 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
     ledWorkDayLen->setText( g_poPrefs->getWorkDayLength() );
 }
 
+void cDlgPreferences::setIconToolTip( const QString &p_qsToolTip )
+{
+    m_poTrayIcon->setToolTip( p_qsToolTip );
+}
+
 void cDlgPreferences::on_sliConsoleLogLevel_valueChanged( int p_inValue )
 {
     lblConsoleLogLevelValue->setText( cSeverity::toStr( (cSeverity::teSeverity)p_inValue ) );

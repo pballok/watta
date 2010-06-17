@@ -14,6 +14,8 @@ class cDlgPreferences : public QDialog, private Ui::dlgPreferences
 public:
     cDlgPreferences( QWidget *p_poParent = 0 );
 
+    void setIconToolTip( const QString &p_qsToolTip );
+
 public slots:
     virtual void accept();
 

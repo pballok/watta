@@ -201,16 +201,39 @@ void cPreferences::save() const
     obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), uiGUILevel );
 }
 
-unsigned int cPreferences::timeStrToSeconds( QString &p_qsTime )
+long cPreferences::timeStrToSeconds( const QString &p_qsTime )
 {
-    bool boConversionOk = true;
-    unsigned int uiSeconds = p_qsTime.section( ':', 2, 2 ).toInt( &boConversionOk, 10 );
+    long loSeconds = 0;
 
-    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 1, 1 ).toInt( &boConversionOk, 10 ) * 60;
-    else uiSeconds = 0;
+    if( p_qsTime != "" )
+    {
+        bool boConversionOk = true;
+        loSeconds = p_qsTime.section( ':', 2, 2 ).toInt( &boConversionOk, 10 );
 
-    if( boConversionOk ) uiSeconds += p_qsTime.section( ':', 0, 0 ).toInt( &boConversionOk, 10 ) * 3600;
-    else uiSeconds = 0;
+        if( boConversionOk ) loSeconds += p_qsTime.section( ':', 1, 1 ).toInt( &boConversionOk, 10 ) * 60;
+        else loSeconds = 0;
 
-    return uiSeconds;
+        if( boConversionOk ) loSeconds += p_qsTime.section( ':', 0, 0 ).toInt( &boConversionOk, 10 ) * 3600;
+        else loSeconds = 0;
+    }
+
+    return loSeconds;
+}
+
+QString cPreferences::secondsToTimeStr( const long p_loSeconds )
+{
+    QString  qsTime = "";
+    unsigned long ulSeconds = p_loSeconds;
+    if( p_loSeconds < 0 )
+    {
+        qsTime = "-";
+        ulSeconds = -1 * p_loSeconds;
+    }
+    unsigned long ulHours = ulSeconds / 3600;
+    ulSeconds -= ulHours * 3600;
+    unsigned long ulMinutes = ulSeconds / 60;
+    ulSeconds -= ulMinutes * 60;
+
+    qsTime += QString( "%1:%2:%3" ).arg( ulHours, 2, 10, QChar( '0' ) ).arg( ulMinutes, 2, 10, QChar( '0' ) ).arg( ulSeconds, 2, 10, QChar( '0' ) );
+    return qsTime;
 }
