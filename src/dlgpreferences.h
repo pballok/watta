@@ -28,8 +28,7 @@ private:
     QMenu                     *m_poTrayIconMenu;
 
 private slots:
-    void on_sliConsoleLogLevel_valueChanged( int p_inValue );
-    void on_sliDBLogLevel_valueChanged( int p_inValue );
+    void on_sliFileLogLevel_valueChanged( int p_inValue );
     void on_sliGUILogLevel_valueChanged( int p_inValue );
 };
 

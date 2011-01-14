@@ -6,11 +6,11 @@
 cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
     : QDialog( p_poParent )
 {
-    cTracer obTrace( "cDlgPreferences::cDlgPreferences" );
+    cTracer obTrace( &g_obLogger, "cDlgPreferences::cDlgPreferences" );
 
     setupUi( this );
 
-    QString qsTitle( g_poPrefs->getAppName() + " Version " + g_poPrefs->getVersion() );
+    QString qsTitle( g_poPrefs->appName() + " Version " + g_poPrefs->version() );
     setWindowTitle( qsTitle );
 
     m_poPreferencesAction = new QAction( QString::fromStdString( "&Preferences" ), this );
@@ -33,14 +33,11 @@ cDlgPreferences::cDlgPreferences( QWidget *p_poParent )
     m_poTrayIcon->setVisible( true );
     m_poTrayIcon->setToolTip( qsTitle );
 
-    unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
-    g_poPrefs->getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );
-    sliConsoleLogLevel->setValue( uiConLevel );
-    sliDBLogLevel->setValue( uiDBLevel );
-    sliGUILogLevel->setValue( uiGUILevel );
+    sliGUILogLevel->setValue( g_poPrefs->GUILogLevel() );
+    sliFileLogLevel->setValue( g_poPrefs->fileLogLevel() );
 
-    ledWorkDayEnd->setText( g_poPrefs->getWorkDayEnd() );
-    ledWorkDayLen->setText( g_poPrefs->getWorkDayLength() );
+    ledWorkDayEnd->setText( g_poPrefs->workDayEnd() );
+    ledWorkDayLen->setText( g_poPrefs->workDayLength() );
 }
 
 void cDlgPreferences::setIconToolTip( const QString &p_qsToolTip )
@@ -48,14 +45,9 @@ void cDlgPreferences::setIconToolTip( const QString &p_qsToolTip )
     m_poTrayIcon->setToolTip( p_qsToolTip );
 }
 
-void cDlgPreferences::on_sliConsoleLogLevel_valueChanged( int p_inValue )
+void cDlgPreferences::on_sliFileLogLevel_valueChanged( int p_inValue )
 {
-    lblConsoleLogLevelValue->setText( cSeverity::toStr( (cSeverity::teSeverity)p_inValue ) );
-}
-
-void cDlgPreferences::on_sliDBLogLevel_valueChanged( int p_inValue )
-{
-    lblDBLogLevelValue->setText( cSeverity::toStr( (cSeverity::teSeverity)p_inValue ) );
+    lblFileLogLevelValue->setText( cSeverity::toStr( (cSeverity::teSeverity)p_inValue ) );
 }
 
 void cDlgPreferences::on_sliGUILogLevel_valueChanged( int p_inValue )
@@ -65,9 +57,8 @@ void cDlgPreferences::on_sliGUILogLevel_valueChanged( int p_inValue )
 
 void cDlgPreferences::accept()
 {
-    g_poPrefs->setLogLevels( sliConsoleLogLevel->value(),
-                             sliDBLogLevel->value(),
-                             sliGUILogLevel->value() );
+    g_poPrefs->setGUILogLevel( (cSeverity::teSeverity)sliGUILogLevel->value() );
+    g_poPrefs->setFileLogLevel( (cSeverity::teSeverity)sliFileLogLevel->value() );
 
     g_poPrefs->setWorkDayEnd( ledWorkDayEnd->text() );
     g_poPrefs->setWorkDayLength( ledWorkDayLen->text() );

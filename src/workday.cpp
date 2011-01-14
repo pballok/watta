@@ -5,7 +5,7 @@
 
 cWorkDay::cWorkDay()
 {
-    cTracer obTracer( "cWorkDay::cWorkDay" );
+    cTracer obTracer( &g_obLogger, "cWorkDay::cWorkDay" );
 
     QString qsDate = QDateTime::currentDateTime().toString( "yyyy-MM-dd" );
 
@@ -18,7 +18,7 @@ cWorkDay::cWorkDay()
 
 cWorkDay::cWorkDay( QString &p_qsDate )
 {
-    cTracer obTracer( "cWorkDay::cWorkDay", p_qsDate.toStdString() );
+    cTracer obTracer( &g_obLogger, "cWorkDay::cWorkDay", p_qsDate.toStdString() );
 
     load( p_qsDate );
 
@@ -29,7 +29,7 @@ cWorkDay::cWorkDay( QString &p_qsDate )
 
 cWorkDay::~cWorkDay()
 {
-    cTracer obTracer( "cWorkDay::~cWorkDay" );
+    cTracer obTracer( &g_obLogger, "cWorkDay::~cWorkDay" );
 
     if( m_poCurrSession ) delete m_poCurrSession;
 }
@@ -49,7 +49,7 @@ long cWorkDay::balance() const
 
 void cWorkDay::load( QString &p_qsDate )
 {
-    cTracer obTracer( "cWorkDay::load", p_qsDate.toStdString() );
+    cTracer obTracer( &g_obLogger, "cWorkDay::load", p_qsDate.toStdString() );
 
     m_qsDate = "";
     m_loFixEndSeconds = 0;
@@ -65,9 +65,9 @@ void cWorkDay::load( QString &p_qsDate )
         poQuery = g_poDB->executeQTQuery( QString( "SELECT `date`, `endTime`, `length` FROM `workdays` WHERE `date`='%1'").arg( p_qsDate ) );
         if( poQuery->size() == 0 )
         {
-            qsEndTime = g_poPrefs->getWorkDayEnd();
-            qsLength  = g_poPrefs->getWorkDayLength();
-            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`, `endTime`, `length`) VALUES ('%1', '%2', '%3')" ).arg( p_qsDate ).arg( qsEndTime ).arg( qsLength ).toStdString(), true );
+            qsEndTime = g_poPrefs->workDayEnd();
+            qsLength  = g_poPrefs->workDayLength();
+            g_poDB->executeQuery( QString( "INSERT INTO `workdays` (`date`, `endTime`, `length`) VALUES ('%1', '%2', '%3')" ).arg( p_qsDate ).arg( qsEndTime ).arg( qsLength ) );
         }
         else
         {
@@ -82,7 +82,7 @@ void cWorkDay::load( QString &p_qsDate )
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
+        g_obLogger << e;
     }
 
     if( poQuery ) delete poQuery;
@@ -92,7 +92,7 @@ void cWorkDay::load( QString &p_qsDate )
 
 void cWorkDay::loadSessions()
 {
-    cTracer obTracer( "cWorkDay::loadSessions" );
+    cTracer obTracer( &g_obLogger, "cWorkDay::loadSessions" );
 
     m_loSecondsAlreadySpent = 0;
     m_loLastSessionEnd = 0;
@@ -109,11 +109,11 @@ void cWorkDay::loadSessions()
 
             if( qsStartTime == "" || qsEndTime == "" )
             {
-                g_obLogger << cSeverity::WARNING << "Corrupt Session Data:";
-                g_obLogger << " Date: " << m_qsDate.toStdString();
-                g_obLogger << " StarTime: " << qsStartTime.toStdString();
-                g_obLogger << " EndTime: " << qsEndTime.toStdString();
-                g_obLogger << cQTLogger::EOM;
+                g_obLogger << cSeverity::WARNING << "Corrupt Session Data:"
+                           << " Date: " << m_qsDate.toStdString()
+                           << " StarTime: " << qsStartTime.toStdString()
+                           << " EndTime: " << qsEndTime.toStdString()
+                           << cLogMessage::EOM;
             }
             else
             {
@@ -125,7 +125,7 @@ void cWorkDay::loadSessions()
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
+        g_obLogger << e;
     }
 
     if( poQuery ) delete poQuery;
@@ -139,6 +139,7 @@ void cWorkDay::calculateEndTimes()
     else m_loLenEndSeconds += m_loLastSessionEnd;
     m_loLenEndSeconds -= m_loSecondsAlreadySpent;
 
-    m_loEndSeconds = max( m_loLenEndSeconds, m_loFixEndSeconds );
+    if( m_loLenEndSeconds > m_loFixEndSeconds ) m_loEndSeconds = m_loLenEndSeconds;
+    else m_loEndSeconds = m_loFixEndSeconds;
     m_qsEndTime = cPreferences::secondsToTimeStr( m_loEndSeconds );
 }

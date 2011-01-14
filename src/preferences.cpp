@@ -3,72 +3,85 @@
 
 #include <QSettings>
 
-cPreferences::cPreferences()
+cPreferences::cPreferences( const QString &p_qsAppName, const QString &p_qsVersion,
+                            cGUIWriter *p_poGUIWriter, cFileWriter *p_poFileWriter  )
+    : m_qsAppName( p_qsAppName ),
+      m_qsVersion( p_qsVersion ),
+      m_poGUIWriter( p_poGUIWriter ),
+      m_poFileWriter( p_poFileWriter )
 {
-    init();
-}
+    m_qsFileName  = QString( "./%1.ini" ).arg( p_qsAppName );
+    m_qsDBHost    = "";
+    m_qsDBSchema  = "";
+    m_qsDBUser    = "";
+    m_qsDBPwd     = "";
 
-cPreferences::cPreferences( const QString &p_qsAppName )
-{
-    init();
-    setAppName( p_qsAppName );
-    load();
+    m_qsWorkDayEnd    = "";
+    m_qsWorkDayLength = "";
+    m_ulWorkDayEndSeconds    = 0;
+    m_ulWorkDayLengthSeconds = 0;
+
+    try
+    {
+        load();
+    } catch( cSevException &e )
+    {
+        g_obLogger << e;
+    }
 }
 
 cPreferences::~cPreferences()
 {
 }
 
-void cPreferences::init()
-{
-    m_qsAppName         = "";
-    m_qsFileName        = "";
-    m_qsVersion         = "";
-    m_qsWorkDayEnd      = "";
-    m_qsWorkDayLength   = "";
-
-    m_ulWorkDayEndSeconds    = 0;
-    m_ulWorkDayLengthSeconds = 0;
-
-}
-
-void cPreferences::setAppName( const QString &p_qsAppName )
-{
-    m_qsAppName = p_qsAppName;
-    m_qsFileName = QString( "./%1.ini" ).arg( p_qsAppName );
-}
-
-QString cPreferences::getAppName() const
+QString cPreferences::appName() const
 {
     return m_qsAppName;
 }
 
-void cPreferences::setVersion( const QString &p_qsVersion )
-{
-    m_qsVersion = p_qsVersion;
-}
-
-QString cPreferences::getVersion() const
+QString cPreferences::version() const
 {
     return m_qsVersion;
 }
 
-void cPreferences::setLogLevels( const unsigned int p_uiConLevel,
-                                 const unsigned int p_uiDBLevel,
-                                 const unsigned int p_uiGUILevel,
-                                 bool p_boSaveNow )
+void cPreferences::setGUILogLevel( const cSeverity::teSeverity p_enLevel )
 {
-    g_obLogger.setMinSeverityLevels( (cSeverity::teSeverity)p_uiConLevel,
-                                     (cSeverity::teSeverity)p_uiDBLevel,
-                                     (cSeverity::teSeverity)p_uiGUILevel );
+    m_poGUIWriter->setMinSeverity( p_enLevel );
+}
 
-    if( p_boSaveNow )
-    {
-        QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), p_uiConLevel );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), p_uiDBLevel );
-        obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), p_uiGUILevel );
-    }
+cSeverity::teSeverity cPreferences::GUILogLevel() const
+{
+    return m_poGUIWriter->minSeverity();
+}
+
+void cPreferences::setFileLogLevel( const cSeverity::teSeverity p_enLevel )
+{
+    m_poFileWriter->setMinSeverity( p_enLevel );
+}
+
+cSeverity::teSeverity cPreferences::fileLogLevel() const
+{
+    return m_poFileWriter->minSeverity();
+}
+
+QString cPreferences::dbHost() const
+{
+    return m_qsDBHost;
+}
+
+QString cPreferences::dbSchema() const
+{
+    return m_qsDBSchema;
+}
+
+QString cPreferences::dbUser() const
+{
+    return m_qsDBUser;
+}
+
+QString cPreferences::dbPassword() const
+{
+    return m_qsDBPwd;
 }
 
 void cPreferences::setWorkDayEnd( const QString &p_qsTime )
@@ -77,12 +90,12 @@ void cPreferences::setWorkDayEnd( const QString &p_qsTime )
     m_ulWorkDayEndSeconds = timeStrToSeconds( m_qsWorkDayEnd );
 }
 
-QString cPreferences::getWorkDayEnd() const
+QString cPreferences::workDayEnd() const
 {
     return m_qsWorkDayEnd;
 }
 
-unsigned long cPreferences::getWorkDayEndSeconds() const
+unsigned long cPreferences::workDayEndSeconds() const
 {
     return m_ulWorkDayEndSeconds;
 }
@@ -93,112 +106,64 @@ void cPreferences::setWorkDayLength( const QString &p_qsTime )
     m_ulWorkDayLengthSeconds = timeStrToSeconds( m_qsWorkDayLength );
 }
 
-QString cPreferences::getWorkDayLength() const
+QString cPreferences::workDayLength() const
 {
     return m_qsWorkDayLength;
 }
 
-unsigned long cPreferences::getWorkDayLengthSeconds() const
+unsigned long cPreferences::workDayLengthSeconds() const
 {
     return m_ulWorkDayLengthSeconds;
 }
 
-void cPreferences::getLogLevels( unsigned int *p_poConLevel,
-                                 unsigned int *p_poDBLevel,
-                                 unsigned int *p_poGUILevel ) const
-{
-    cSeverity::teSeverity  enConLevel = cSeverity::DEBUG;
-    cSeverity::teSeverity  enDBLevel  = cSeverity::DEBUG;
-    cSeverity::teSeverity  enGUILevel = cSeverity::DEBUG;
-    g_obLogger.getMinSeverityLevels( &enConLevel, &enDBLevel, &enGUILevel );
-
-    if( p_poConLevel ) *p_poConLevel = enConLevel;
-    if( p_poDBLevel )  *p_poDBLevel  = enDBLevel;
-    if( p_poGUILevel ) *p_poGUILevel = enGUILevel;
-}
-
-void cPreferences::setDBAccess( const QString &p_qsHost, const QString &p_qsDB,
-                                const QString &p_qsUser, const QString &p_qsPwd )
-{
-    g_poDB->setHostName( p_qsHost );
-    g_poDB->setDatabaseName( p_qsDB );
-    g_poDB->setUserName( p_qsUser );
-    g_poDB->setPassword( p_qsPwd );
-}
-
-void cPreferences::getDBAccess( QString *p_poHost, QString *p_poDB,
-                                QString *p_poUser, QString *p_poPwd ) const
-{
-    if( p_poHost ) *p_poHost = g_poDB->getHostName();
-    if( p_poDB )   *p_poDB   = g_poDB->getDatabaseName();
-    if( p_poUser ) *p_poUser = g_poDB->getUserName();
-    if( p_poPwd )  *p_poPwd  = g_poDB->getPassword();
-}
-
-void cPreferences::load()
+void cPreferences::load() throw(cSevException)
 {
     QSettings obPrefFile( m_qsFileName, QSettings::IniFormat );
-
     if( obPrefFile.status() != QSettings::NoError )
     {
-        g_obLogger << cSeverity::WARNING;
-        g_obLogger << "Failed to load preferences from file: " << m_qsFileName.toStdString();
-        g_obLogger << cQTLogger::EOM;
+        throw cSevException( cSeverity::WARNING, QString( "Failed to open preferences file: %1" ).arg( m_qsFileName ).toStdString() );
     }
-    else
+
+    unsigned int uiGUILevel = obPrefFile.value( "LogLevels/GUILogLevel", cSeverity::ERROR ).toUInt();
+    if( (uiGUILevel >= cSeverity::MAX) ||
+        (uiGUILevel <= cSeverity::MIN) )
     {
-        setWorkDayEnd( obPrefFile.value( QString::fromAscii( "WorkDay/EndTime" ), "00:00:00" ).toString() );
-        setWorkDayLength( obPrefFile.value( QString::fromAscii( "WorkDay/Length" ), "08:30:00" ).toString() );
-
-        unsigned int uiConsoleLevel = obPrefFile.value( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiConsoleLevel >= cSeverity::MAX) ||
-            (uiConsoleLevel <= cSeverity::MIN) )
-        {
-            uiConsoleLevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid ConsoleLogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        unsigned int uiDBLevel = obPrefFile.value( QString::fromAscii( "LogLevels/DBLogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiDBLevel >= cSeverity::MAX) &&
-            (uiDBLevel <= cSeverity::MIN) )
-        {
-            uiDBLevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid DBLogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        unsigned int uiGUILevel = obPrefFile.value( QString::fromAscii( "LogLevels/GUILogLevel" ), cSeverity::ERROR ).toUInt();
-        if( (uiGUILevel >= cSeverity::MAX) &&
-            (uiGUILevel <= cSeverity::MIN) )
-        {
-            uiGUILevel = cSeverity::DEBUG;
-
-            g_obLogger << cSeverity::WARNING;
-            g_obLogger << "Invalid GUILogLevel in preferences file: " << m_qsFileName.toStdString();
-            g_obLogger << cQTLogger::EOM;
-        }
-
-        setLogLevels( uiConsoleLevel, uiDBLevel, uiGUILevel );
+        uiGUILevel = cSeverity::NONE;
+        throw cSevException( cSeverity::WARNING, QString( "Invalid GUILogLevel in preferences file: %1" ).arg( m_qsFileName ).toStdString() );
     }
+    setGUILogLevel( (cSeverity::teSeverity)uiGUILevel );
+
+    unsigned int uiFileLevel = obPrefFile.value( "LogLevels/FileLogLevel", cSeverity::ERROR ).toUInt();
+    if( (uiFileLevel >= cSeverity::MAX) ||
+        (uiFileLevel <= cSeverity::MIN) )
+    {
+        uiFileLevel = cSeverity::NONE;
+        throw cSevException( cSeverity::WARNING, QString( "Invalid FileLogLevel in preferences file: %1" ).arg( m_qsFileName ).toStdString() );
+    }
+    setFileLogLevel( (cSeverity::teSeverity)uiFileLevel );
+
+    m_qsDBHost    = obPrefFile.value( "DataBase/Host", "" ).toString();
+    m_qsDBSchema  = obPrefFile.value( "DataBase/Schema", "" ).toString();
+    m_qsDBUser    = obPrefFile.value( "DataBase/User", "" ).toString();
+    m_qsDBPwd     = obPrefFile.value( "DataBase/Password", "" ).toString();
+
+    setWorkDayEnd( obPrefFile.value( "WorkDay/EndTime", "00:00:00" ).toString() );
+    setWorkDayLength( obPrefFile.value( "WorkDay/Length", "08:30:00" ).toString() );
 }
 
-void cPreferences::save() const
+void cPreferences::save() const throw(cSevException)
 {
     QSettings  obPrefFile( m_qsFileName, QSettings::IniFormat );
+    if( obPrefFile.status() != QSettings::NoError )
+    {
+        throw cSevException( cSeverity::WARNING, QString( "Failed to write to preferences file: %1" ).arg( m_qsFileName ).toStdString() );
+    }
+
+    obPrefFile.setValue( "LogLevels/GUILogLevel", m_poGUIWriter->minSeverity() );
+    obPrefFile.setValue( "LogLevels/FileLogLevel", m_poFileWriter->minSeverity() );
 
     obPrefFile.setValue( "WorkDay/EndTime", m_qsWorkDayEnd );
     obPrefFile.setValue( "WorkDay/Length", m_qsWorkDayLength );
-
-    unsigned int  uiConLevel, uiDBLevel, uiGUILevel;
-    getLogLevels( &uiConLevel, &uiDBLevel, &uiGUILevel );
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/ConsoleLogLevel" ), uiConLevel );
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/DBLogLevel" ), uiDBLevel );
-    obPrefFile.setValue( QString::fromAscii( "LogLevels/GUILogLevel" ), uiGUILevel );
 }
 
 long cPreferences::timeStrToSeconds( const QString &p_qsTime )

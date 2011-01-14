@@ -3,15 +3,21 @@
 #include <QString>
 #include <QMessageBox>
 
-#include "qtlogger.h"
-#include "qtmysqlconnection.h"
+#include <iostream>
+#include <logger.h>
+#include <guiwriter.h>
+#include <filewriter.h>
+#include <qtmysqlconnection.h>
+
 #include "preferences.h"
 #include "dlgpreferences.h"
 #include "wattamainapp.h"
 
-cQTLogger             g_obLogger;
-cQTMySQLConnection   *g_poDB;
-cPreferences         *g_poPrefs;
+cLogger             g_obLogger;
+cQTMySQLConnection *g_poDB;
+cPreferences       *g_poPrefs;
+
+using namespace std;
 
 int main( int argc, char *argv[] )
 {
@@ -20,10 +26,16 @@ int main( int argc, char *argv[] )
     g_poDB = NULL;
     g_poPrefs = NULL;
 
+    cWattaMainApp  apMainApp( argc, argv );
+
+    cGUIWriter  obGUIWriter;
+    g_obLogger.registerWriter( &obGUIWriter );
+
+    cFileWriter obFileWriter( cSeverity::NONE, "watta.log", cFileWriter::APPEND );
+    g_obLogger.registerWriter( &obFileWriter );
+
     try
     {
-        cWattaMainApp  apMainApp( argc, argv );
-
         bool          boSysTrayFound = false;
         unsigned int  uiCheckCounter = 0;
         while( !boSysTrayFound && uiCheckCounter++ < 20 )
@@ -36,18 +48,19 @@ int main( int argc, char *argv[] )
             throw cSevException( cSeverity::ERROR, "Couldn't detect any system tray on this system." );
         }
 
-        g_poDB     = new cQTMySQLConnection;
+        g_poDB     = new cQTMySQLConnection( &g_obLogger );
 
-        g_poPrefs  = new cPreferences( QString::fromAscii( "watta" ) );
-        g_poPrefs->setVersion( "0.2.0" );
-        g_poPrefs->setDBAccess( "localhost", "watta", "watta", "watta" );
+        g_poPrefs  = new cPreferences( "watta", "0.3.0", &obGUIWriter, &obFileWriter );
 
+        g_poDB->setHostName( g_poPrefs->dbHost() );
+        g_poDB->setDatabaseName( g_poPrefs->dbSchema() );
+        g_poDB->setUserName( g_poPrefs->dbUser() );
+        g_poDB->setPassword( g_poPrefs->dbPassword() );
         g_poDB->open();
-        g_obLogger.setDBConnection( g_poDB );
 
-        g_obLogger << cSeverity::INFO;
-        g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " started.";
-        g_obLogger << cQTLogger::EOM;
+        g_obLogger << cSeverity::INFO
+                   << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " started."
+                   << cLogMessage::EOM;
 
         cWattaMainApp::setQuitOnLastWindowClosed( false );
 
@@ -58,11 +71,21 @@ int main( int argc, char *argv[] )
     }
     catch( cSevException &e )
     {
-        g_obLogger << e.severity() << e.what() << cQTLogger::EOM;
+        g_obLogger << cSeverity::ERROR << "WHOA... Just caught an unhandled exception!" << cLogMessage::EOM;
+        g_obLogger << e;
+
+        inRetVal = 1;
     }
 
+    g_obLogger << cSeverity::INFO
+               << g_poPrefs->appName().toStdString() << " Version " << g_poPrefs->version().toStdString() << " ended."
+               << cLogMessage::EOM;
+
+    cerr << "Point1" << endl;
     if( g_poDB ) delete g_poDB;
+    cerr << "Point2" << endl;
     if( g_poPrefs ) delete g_poPrefs;
+    cerr << "Point3" << endl;
 
     return inRetVal;
 }

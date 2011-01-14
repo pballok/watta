@@ -3,7 +3,7 @@
 
 cWattaMainApp::cWattaMainApp( int &argc, char **argv ) : QApplication( argc, argv )
 {
-    cTracer obTrace( "cWattaMainApp::cWattaMainApp" );
+    cTracer obTrace( &g_obLogger, "cWattaMainApp::cWattaMainApp" );
     m_poCurrWorkDay = NULL;
     m_poMainDlg     = NULL;
     m_inTimerId     = 0;
@@ -13,12 +13,11 @@ cWattaMainApp::cWattaMainApp( int &argc, char **argv ) : QApplication( argc, arg
 
 cWattaMainApp::~cWattaMainApp()
 {
-    cTracer obTrace( "cWattaMainApp::~cWattaMainApp" );
 }
 
 void cWattaMainApp::startSession( cDlgPreferences *p_poMainDlg ) throw()
 {
-    cTracer obTrace( "cWattaMainApp::startSession" );
+    cTracer obTrace( &g_obLogger, "cWattaMainApp::startSession" );
 
     m_poCurrWorkDay = new cWorkDay();
     m_poMainDlg = p_poMainDlg;
@@ -28,15 +27,11 @@ void cWattaMainApp::startSession( cDlgPreferences *p_poMainDlg ) throw()
 
 void cWattaMainApp::endSession() throw()
 {
-    cTracer obTrace( "cWattaMainApp::endSession" );
-
-    if( m_poCurrWorkDay ) delete m_poCurrWorkDay;
-
-    g_obLogger << cSeverity::INFO;
-    g_obLogger << g_poPrefs->getAppName().toStdString() << " Version " << g_poPrefs->getVersion().toStdString() << " ended.";
-    g_obLogger << cQTLogger::EOM;
+    cTracer obTrace( &g_obLogger, "cWattaMainApp::endSession" );
 
     killTimer( m_inTimerId );
+
+    if( m_poCurrWorkDay ) delete m_poCurrWorkDay;
 }
 
 void cWattaMainApp::timerEvent ( QTimerEvent * )

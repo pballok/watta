@@ -33,158 +33,6 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="lblConsoleLogLevel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>130</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&amp;Console Log Level:</string>
-          </property>
-          <property name="textFormat">
-           <enum>Qt::AutoText</enum>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse</set>
-          </property>
-          <property name="buddy">
-           <cstring>sliConsoleLogLevel</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="lblConsoleLogLevelValue">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>NONE</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="sliConsoleLogLevel">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>5</number>
-          </property>
-          <property name="pageStep">
-           <number>1</number>
-          </property>
-          <property name="value">
-           <number>1</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="tickPosition">
-           <enum>QSlider::TicksBothSides</enum>
-          </property>
-          <property name="tickInterval">
-           <number>1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="lblDBLogLevel">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>130</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>&amp;DB Log Level:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>sliDBLogLevel</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="lblDBLogLevelValue">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>NONE</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSlider" name="sliDBLogLevel">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>5</number>
-          </property>
-          <property name="pageStep">
-           <number>1</number>
-          </property>
-          <property name="value">
-           <number>1</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="tickPosition">
-           <enum>QSlider::TicksBothSides</enum>
-          </property>
-          <property name="tickInterval">
-           <number>1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="lblGUILogLevel">
@@ -232,6 +80,85 @@
         </item>
         <item>
          <widget class="QSlider" name="sliGUILogLevel">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>5</number>
+          </property>
+          <property name="pageStep">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <number>1</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="tickPosition">
+           <enum>QSlider::TicksBothSides</enum>
+          </property>
+          <property name="tickInterval">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="lblFileLogLevel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>130</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>&amp;Console Log Level:</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::AutoText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse</set>
+          </property>
+          <property name="buddy">
+           <cstring>sliFileLogLevel</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblFileLogLevelValue">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>70</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>NONE</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSlider" name="sliFileLogLevel">
           <property name="minimum">
            <number>1</number>
           </property>

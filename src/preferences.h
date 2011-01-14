@@ -3,52 +3,56 @@
 
 #include <QString>
 
+#include <guiwriter.h>
+#include <filewriter.h>
+#include <sevexception.h>
+
 class cPreferences
 {
 public:
-    cPreferences();
-    cPreferences( const QString &p_qsAppName );
+    cPreferences( const QString &p_qsAppName, const QString &p_qsVersion,
+                  cGUIWriter *p_poGUIWriter, cFileWriter *p_poFileWriter );
     ~cPreferences();
 
-    void                       setAppName( const QString &p_qsAppName );
-    QString                    getAppName() const;
-    void                       setVersion( const QString &p_qsVersion );
-    QString                    getVersion() const;
-    void                       setWorkDayEnd( const QString &p_qsTime );
-    QString                    getWorkDayEnd() const;
-    unsigned long              getWorkDayEndSeconds() const;
-    void                       setWorkDayLength( const QString &p_qsTime );
-    QString                    getWorkDayLength() const;
-    unsigned long              getWorkDayLengthSeconds() const;
-    void                       setLogLevels( const unsigned int p_uiConLevel,
-                                             const unsigned int p_uiDBLevel,
-                                             const unsigned int p_uiGUILevel,
-                                             bool p_boSaveNow = false );
-    void                       getLogLevels( unsigned int *p_poConLevel = NULL,
-                                             unsigned int *p_poDBLevel = NULL,
-                                             unsigned int *p_poGUILevel = NULL ) const;
-    void                       setDBAccess( const QString &p_qsHost, const QString &p_qsDB,
-                                            const QString &p_qsUser, const QString &p_qsPwd );
-    void                       getDBAccess( QString *p_poHost = NULL, QString *p_poDB = NULL,
-                                            QString *p_poUser = NULL, QString *p_poPwd = NULL) const;
+    QString                    appName() const;
+    QString                    version() const;
+    void                       setGUILogLevel( const cSeverity::teSeverity p_enLevel );
+    cSeverity::teSeverity      GUILogLevel() const;
+    void                       setFileLogLevel( const cSeverity::teSeverity p_enLevel );
+    cSeverity::teSeverity      fileLogLevel() const;
+    QString                    dbHost() const;
+    QString                    dbSchema() const;
+    QString                    dbUser() const;
+    QString                    dbPassword() const;
 
-    void                       load();
-    void                       save() const;
+    void                       setWorkDayEnd( const QString &p_qsTime );
+    QString                    workDayEnd() const;
+    unsigned long              workDayEndSeconds() const;
+    void                       setWorkDayLength( const QString &p_qsTime );
+    QString                    workDayLength() const;
+    unsigned long              workDayLengthSeconds() const;
+
+    void                       load() throw(cSevException);
+    void                       save() const throw(cSevException);
 
     static long                timeStrToSeconds( const QString &p_qsTime );
     static QString             secondsToTimeStr( const long p_loSeconds );
 
 private:
     QString                    m_qsAppName;
-    QString                    m_qsFileName;
     QString                    m_qsVersion;
+    QString                    m_qsFileName;
+    QString                    m_qsDBHost;
+    QString                    m_qsDBSchema;
+    QString                    m_qsDBUser;
+    QString                    m_qsDBPwd;
+    cGUIWriter*                m_poGUIWriter;
+    cFileWriter*               m_poFileWriter;
+
     QString                    m_qsWorkDayEnd;
     QString                    m_qsWorkDayLength;
-
     unsigned long              m_ulWorkDayEndSeconds;
     unsigned long              m_ulWorkDayLengthSeconds;
-
-    void init();
 };
 
 #endif

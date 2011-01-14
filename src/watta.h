@@ -1,13 +1,15 @@
-#ifndef BCHEST_H
-#define BCHEST_H
+#ifndef WATTA_H
+#define WATTA_H
 
-#include "qtlogger.h"
-#include "tracer.h"
-#include "qtmysqlconnection.h"
+#include <logger.h>
+#include <tracer.h>
+#include <qtmysqlconnection.h>
+#include <sevexception.h>
+
 #include "preferences.h"
 
-extern cQTLogger             g_obLogger;
-extern cQTMySQLConnection   *g_poDB;
-extern cPreferences         *g_poPrefs;
+extern cLogger             g_obLogger;
+extern cQTMySQLConnection *g_poDB;
+extern cPreferences       *g_poPrefs;
 
-#endif
+#endif // WATTA_H

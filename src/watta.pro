@@ -1,27 +1,29 @@
 TEMPLATE = app
-FORMS = dlglogs.ui \
-    dlgpreferences.ui
-HEADERS = watta.h \
-    sevexception.h \
-    tracer.h \
-    dbconnection.h \
-    qtmysqlconnection.h \
-    qtmysqlquerymodel.h \
-    qtlogger.h \
+INCLUDEPATH += ../../qtframework
+FORMS = dlgpreferences.ui
+HEADERS = ../../qtframework/severity.h \
+    ../../qtframework/sevexception.h \
+    ../../qtframework/logger.h \
+    ../../qtframework/logwriter.h \
+    ../../qtframework/guiwriter.h \
+    ../../qtframework/filewriter.h \
+    ../../qtframework/logmessage.h \
+    ../../qtframework/tracer.h \
+    ../../qtframework/qtmysqlconnection.h \
+    watta.h \
     preferences.h \
-    dlglogs.h \
     dlgpreferences.h \
     session.h \
     wattamainapp.h \
     workday.h
-SOURCES = tracer.cpp \
-    dbconnection.cpp \
-    qtmysqlconnection.cpp \
-    qtmysqlquerymodel.cpp \
-    qtlogger.cpp \
+SOURCES = ../../qtframework/logger.cpp \
+    ../../qtframework/guiwriter.cpp \
+    ../../qtframework/filewriter.cpp \
+    ../../qtframework/logmessage.cpp \
+    ../../qtframework/tracer.cpp \
+    ../../qtframework/qtmysqlconnection.cpp \
     preferences.cpp \
     main.cpp \
-    dlglogs.cpp \
     dlgpreferences.cpp \
     session.cpp \
     wattamainapp.cpp \
@@ -29,5 +31,4 @@ SOURCES = tracer.cpp \
 DESTDIR = ..
 QT += sql
 CONFIG += qt
-CONFIG += console
 RESOURCES += watta.qrc
