@@ -1,10 +1,2 @@
-watta-build-desktop/*
-watta
-watta.ini
-src/watta.pro.user
-src/Makefile
-src/*.o
-src/moc_*
-src/qrc_*
-src/ui_*.h
+watta.pro.user
 

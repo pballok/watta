@@ -10,6 +10,7 @@ HEADERS = ../../qtframework/severity.h \
     ../../qtframework/logmessage.h \
     ../../qtframework/tracer.h \
     ../../qtframework/qtmysqlconnection.h \
+    ../../qtframework/preferences.h \
     watta.h \
     preferences.h \
     dlgpreferences.h \
@@ -22,13 +23,13 @@ SOURCES = ../../qtframework/logger.cpp \
     ../../qtframework/logmessage.cpp \
     ../../qtframework/tracer.cpp \
     ../../qtframework/qtmysqlconnection.cpp \
+    ../../qtframework/preferences.cpp \
     preferences.cpp \
     main.cpp \
     dlgpreferences.cpp \
     session.cpp \
     wattamainapp.cpp \
     workday.cpp
-DESTDIR = ..
 QT += sql
 CONFIG += qt
 RESOURCES += watta.qrc
